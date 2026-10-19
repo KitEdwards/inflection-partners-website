@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X, ArrowRight, Linkedin } from 'lucide-react';
 import Logo from './Logo';
 import Lenis from 'lenis';
+import { LenisContext } from './LenisContext';
 
 const NAV_LINKS = [
   { name: "Perspective", href: "/" },
@@ -41,6 +42,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const lenisRef = useRef<Lenis | null>(null);
+  const [lenis, setLenis] = useState<Lenis | null>(null);
 
   useEffect(() => {
     // Initialize Lenis for smooth scrolling
@@ -53,6 +55,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     });
 
     lenisRef.current = lenis;
+    setLenis(lenis);
 
     function raf(time: number) {
       lenis.raf(time);
@@ -63,6 +66,8 @@ export default function Layout({ children }: { children: ReactNode }) {
 
     return () => {
       lenis.destroy();
+      lenisRef.current = null;
+      setLenis(null);
     };
   }, []);
 
@@ -109,6 +114,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   }, [lastScrollY]);
 
   return (
+    <LenisContext.Provider value={lenis}>
     <div className="min-h-screen font-sans bg-brand-paper text-brand-text">
       {/* Navigation */}
       <motion.nav 
@@ -231,7 +237,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           
           <div className="flex gap-8 text-sm font-medium text-white/40">
             <a href="https://www.linkedin.com/company/inflection-partners-ai/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">LinkedIn</a>
-            <a href="#" className="hover:text-white transition-colors">Privacy</a>
+            <Link to="/privacy" className="hover:text-white transition-colors">Privacy</Link>
           </div>
 
           <p className="text-[10px] text-white/20 font-mono tracking-widest uppercase">
@@ -240,5 +246,6 @@ export default function Layout({ children }: { children: ReactNode }) {
         </div>
       </footer>
     </div>
+    </LenisContext.Provider>
   );
 }

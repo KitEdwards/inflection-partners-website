@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { useEffect, lazy, Suspense } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import Layout from './components/Layout';
 
 // Lazy load page components
@@ -7,6 +8,7 @@ const Home = lazy(() => import('./pages/Home'));
 const Approach = lazy(() => import('./pages/Approach'));
 const Economics = lazy(() => import('./pages/Economics'));
 const Contact = lazy(() => import('./pages/Contact'));
+const Privacy = lazy(() => import('./pages/Privacy'));
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -44,9 +46,11 @@ export default function App() {
             <Route path="/approach" element={<Approach />} />
             <Route path="/economics" element={<Economics />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/privacy" element={<Privacy />} />
           </Routes>
         </Suspense>
       </Layout>
+      <Analytics />
     </Router>
   );
 }
